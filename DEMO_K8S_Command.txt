@@ -1,0 +1,65 @@
+##Enable API Goolge Container
+##create Kubernetes Cluster on GKE 
+gcloud config set project sinergy-k8s
+gcloud config set compute/zone us-west1-a
+gcloud container clusters create sng-k8s-test
+
+##for use kubectl command
+gcloud container clusters get-credentials sng-k8s-test
+
+########
+#Use First Test Imange
+########
+
+## Run the first test Image
+kubectl run hello-server --image gcr.io/google-samples/hello-app:1.0 --port 8080
+kubectl expose deployment hello-server --type LoadBalancer --port 80 --target-port 8080
+kubectl get service hello-server
+
+
+########
+## Build Multi-Tier App
+## go to ./app/rsvp
+########
+
+docker build -t rsvp-image .
+docker image ls
+gcloud auth configure-docker
+docker tag rsvp-image gcr.io/sinergy-k8s/rsvp-image:tag1
+##Enable API Goolge Container
+docker push gcr.io/sinergy-k8s/rsvp-image:tag1
+
+##Create a DB
+kubectl create -f rsvp-db.yaml
+kubectl create -f rsvp-db-service.yaml
+kubectl get deployments
+kubectl get services
+
+##Create a FrontEnd
+kubectl create -f rsvp-web.yaml
+kubectl create -f rsvp-web-service.yaml
+kubectl get deployments
+kubectl get services
+kubectl expose deployment rsvp --type=LoadBalancer --name=rsvp-nlb
+
+##Scale
+kubectl scale deployment rsvp --replicas=3
+kubectl get deployments
+
+
+########
+Update Imange and use deployment
+go to ./deployment
+########
+
+##Create NGNIX deployment
+kubectl create -f  https://k8s.io/examples/controllers/nginx-deployment.yaml
+
+##Update Docker image
+kubectl set image deployment/nginx-deployment nginx=nginx:1.9.1
+kubectl describe deployments
+
+##Roll Back
+kubectl set image deployment/nginx-deployment nginx=nginx:1.91
+kubectl rollout status deployments nginx-deployment
+kubectl rollout history deployment/nginx-deployment
