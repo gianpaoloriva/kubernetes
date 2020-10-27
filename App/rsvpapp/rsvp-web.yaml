@@ -16,7 +16,8 @@ spec:
     spec:
       containers:
       - name: rsvp-app
-        image: gcr.io/sinergy-k8s/rsvp-image:tag1
+        image: rsvp-image:latest
+        imagePullPolicy: Never
         env:
         - name: MONGODB_HOST
           value: mongodb
