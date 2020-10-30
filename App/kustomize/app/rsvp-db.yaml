@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx-deployment
+  name: rsvp-db
   labels:
-    app: nginx
+    appdb: rsvpdb
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: nginx
+      appdb: rsvpdb
   template:
     metadata:
       labels:
-        app: nginx
+        appdb: rsvpdb
     spec:
       containers:
-      - name: nginx
-        image: nginx:1.7.9
+      - name: rsvp-db
+        image: mongo
         ports:
-        - containerPort: 80
+        - containerPort: 27017
 

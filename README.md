@@ -2,8 +2,15 @@
 
 ### Build Docker image
 ```
+
+minikube addons enable registry
+minikube addons enable metrics-server
+minikube addons enable dashboard
+eval $(minikube docker-env)
+
 go to ./app/rsvpapp
 docker build -t rsvp-image .
+
 ```
 
 ### create DB
@@ -16,11 +23,6 @@ kubectl get services
 
 ### Create FrontEnd
 ```
-eval $(minikube docker-env)
-minikube addons enable registry
-minikube addons enable metrics-server
-minikube addons enable dashboard
-
 kubectl create -f rsvp-web.yaml
 kubectl create -f rsvp-web-service.yaml
 kubectl get deployments
@@ -28,7 +30,7 @@ kubectl get services
 
 kubectl expose deployment rsvp --type=LoadBalancer --name=rsvp-nlb
 
-minikube service rsvp-nlb 
+minikube service rsvp-nlb
 ```
 
 ### Scale
