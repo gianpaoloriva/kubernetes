@@ -71,3 +71,14 @@ helm install my-grafana bitnami/grafana --version 3.4.5
 kubectl port-forward svc/my-grafana 8080:3000
 
 ```
+
+## create GKE Cluster
+```
+gcloud config set project nuzdah-internal
+gcloud config set compute/zone us-west1-a
+gcloud container clusters create vdm-k8s-test
+
+gcloud container clusters get-credentials vdm-k8s-test
+
+gcloud container clusters delete vdm-k8s-test
+```
