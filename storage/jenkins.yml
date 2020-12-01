@@ -53,6 +53,17 @@ data:
 
 ---
 
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx
+  namespace: jenkins
+data:
+  jenkins-nc: dfjdsfkldpfdsàfkmdsaòflkdsmflkdmldksmvfldmgvfd,mv d,mvdvm dfv
+  
+
+---
+
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
@@ -96,6 +107,8 @@ spec:
           mountPath: /var/jenkins_home
         - name: jenkins-creds
           mountPath: /etc/secrets
+        - name: ngnix.conf
+          mountPath: /etc/ngnix/
         resources:
           limits:
             memory: 2Gi
@@ -110,5 +123,8 @@ spec:
       - name: jenkins-creds
         secret:
           secretName: jenkins-creds
+      - name: jenkins-creds
+        configMap:
+          Name: ngnix.conf
       securityContext:
         fsGroup: 1000
